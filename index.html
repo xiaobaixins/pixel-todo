@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#efe6d0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="PixelTodo">
+<title>PixelTodo · 像素待办</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="top">
+      <h1>TODO<span class="cursor">_</span></h1>
+      <div class="tools">
+        <button id="themeBtn" class="tool" type="button">DARK</button>
+        <button id="soundBtn" class="tool" type="button">SND ON</button>
+      </div>
+    </div>
+    <div class="date" id="date"></div>
+    <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+    <div class="stats">
+      <span id="left">0 LEFT</span>
+      <span id="done">0 DONE</span>
+      <button id="clearBtn" class="mini" type="button" style="display:none">CLEAR</button>
+    </div>
+  </header>
+
+  <main>
+    <ul id="list"></ul>
+    <div id="empty">NO TASKS YET<br><span class="blink">ADD ONE BELOW</span></div>
+  </main>
+
+  <footer>
+    <div class="filters">
+      <button class="chip active" data-f="all" type="button">ALL</button>
+      <button class="chip" data-f="active" type="button">ACTIVE</button>
+      <button class="chip" data-f="done" type="button">DONE</button>
+    </div>
+    <form id="addForm" autocomplete="off">
+      <input id="input" type="text" placeholder="ADD TASK..." maxlength="80">
+      <button id="addBtn" type="submit">ADD</button>
+    </form>
+    <p class="hint">TAP TEXT TO EDIT / TAP BOX TO CHECK</p>
+  </footer>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
