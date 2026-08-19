@@ -12,7 +12,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 <div id="app">
@@ -24,6 +24,16 @@
         <button id="soundBtn" class="tool" type="button">静音</button>
       </div>
     </div>
+
+    <div class="countdown" id="cdWrap" role="button" title="点按设置考研日期">
+      <span class="cd-label">距考研还有</span>
+      <span class="cd-num"><span id="cdDays">--</span><span class="cd-unit">天</span></span>
+    </div>
+    <div class="cd-edit" id="cdEdit" hidden>
+      <span class="cd-label">考研日期</span>
+      <input type="date" id="cdInput">
+    </div>
+
     <div class="date" id="date"></div>
     <div class="bar"><div class="bar-fill" id="barFill"></div></div>
     <div class="stats">
@@ -32,6 +42,17 @@
       <button id="clearBtn" class="mini" type="button" style="display:none">清除已完成</button>
     </div>
   </header>
+
+  <section class="heat open" id="heat">
+    <button class="heat-head" id="heatToggle" type="button">
+      <span>打卡记录 <span class="arrow">▼</span></span>
+      <span class="streak" id="streak">连续打卡 0 天</span>
+    </button>
+    <div class="heat-body" id="heatBody">
+      <div class="heat-grid" id="heatGrid"></div>
+      <div class="legend">少 <i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i> 多</div>
+    </div>
+  </section>
 
   <main>
     <ul id="list"></ul>
@@ -44,13 +65,36 @@
       <button class="chip" data-f="active" type="button">未完成</button>
       <button class="chip" data-f="done" type="button">已完成</button>
     </div>
+    <div class="filters cats">
+      <button class="chip active" data-cat="all" type="button">全部科目</button>
+      <button class="chip" data-cat="数学" type="button">数学</button>
+      <button class="chip" data-cat="英语" type="button">英语</button>
+      <button class="chip" data-cat="408" type="button">408</button>
+      <button class="chip" data-cat="政治" type="button">政治</button>
+      <button class="chip" data-cat="其他" type="button">其他</button>
+    </div>
     <form id="addForm" autocomplete="off">
+      <div class="sel">
+        <select id="catSel">
+          <option value="数学">数学</option>
+          <option value="英语">英语</option>
+          <option value="408">408</option>
+          <option value="政治">政治</option>
+          <option value="其他" selected>其他</option>
+        </select>
+      </div>
       <input id="input" type="text" placeholder="添加任务..." maxlength="80">
       <button id="addBtn" type="submit">添加</button>
     </form>
-    <p class="hint">点文字编辑 / 点方块勾选</p>
+    <div class="pomo">
+      <button class="pomo-time" id="pomoTime" type="button" title="点按切换时长">25:00</button>
+      <button class="pomo-ctl" id="pomoCtl" type="button">开始</button>
+      <button class="pomo-ctl" id="pomoReset" type="button">重置</button>
+      <span class="pomo-stats" id="pomoStats">今日 0 分</span>
+    </div>
+    <p class="hint">点文字编辑 / 点标签换科目 / 点方块勾选</p>
   </footer>
 </div>
-<script src="app.js?v=2"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>
