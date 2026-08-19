@@ -22,7 +22,7 @@ var list=document.getElementById('list'),
     themeBtn=document.getElementById('themeBtn'),
     soundBtn=document.getElementById('soundBtn');
 
-/* ---------- pixel audio ---------- */
+/* ---------- 像素音效 ---------- */
 var actx=null;
 function beep(freq,dur){
   if(!state.sound)return;
@@ -37,7 +37,7 @@ function beep(freq,dur){
   }catch(e){}
 }
 
-/* ---------- storage ---------- */
+/* ---------- 数据存储 ---------- */
 function save(){localStorage.setItem(LS_KEY,JSON.stringify(state.todos));}
 function load(){
   try{state.todos=JSON.parse(localStorage.getItem(LS_KEY))||[];}
@@ -45,7 +45,7 @@ function load(){
   state.todos=state.todos.filter(function(t){return t&&typeof t.text==='string'&&typeof t.done==='boolean';});
 }
 
-/* ---------- render ---------- */
+/* ---------- 渲染 ---------- */
 function visible(){
   return state.todos.filter(function(t){
     if(state.filter==='active')return !t.done;
@@ -62,7 +62,7 @@ function render(){
 
     var chk=document.createElement('button');
     chk.type='button';chk.className='check';
-    chk.setAttribute('aria-label',t.done?'mark as not done':'mark as done');
+    chk.setAttribute('aria-label',t.done?'标记为未完成':'标记为完成');
     chk.innerHTML='<i></i>';
     chk.addEventListener('click',function(){
       t.done=!t.done;
@@ -98,7 +98,7 @@ function render(){
 
       var del=document.createElement('button');
       del.type='button';del.className='del';del.textContent='×';
-      del.setAttribute('aria-label','delete task');
+      del.setAttribute('aria-label','删除任务');
       del.addEventListener('click',function(){
         state.todos=state.todos.filter(function(x){return x.id!==t.id;});
         beep(240,0.1);
@@ -111,8 +111,8 @@ function render(){
 
   var left=0,done=0,total=state.todos.length;
   state.todos.forEach(function(t){if(t.done)done++;else left++;});
-  leftEl.textContent=left+' LEFT';
-  doneEl.textContent=done+' DONE';
+  leftEl.textContent=left+' 项未完成';
+  doneEl.textContent=done+' 项已完成';
   barFill.style.width=(total?Math.round(done/total*100):0)+'%';
   emptyEl.style.display=total?'none':'block';
   clearBtn.style.display=(done&&state.filter==='done')?'inline-block':'none';
@@ -122,7 +122,7 @@ function render(){
   save();
 }
 
-/* ---------- events ---------- */
+/* ---------- 事件 ---------- */
 addForm.addEventListener('submit',function(e){
   e.preventDefault();
   var v=input.value.trim();
@@ -154,26 +154,26 @@ soundBtn.addEventListener('click',function(){
   if(state.sound)beep(880,0.06);
 });
 
-/* ---------- theme / sound ---------- */
+/* ---------- 主题 / 音效 ---------- */
 function applyTheme(){
   document.documentElement.dataset.theme=state.theme;
   var meta=document.querySelector('meta[name="theme-color"]');
   if(meta)meta.setAttribute('content',state.theme==='dark'?'#1b1917':'#efe6d0');
-  themeBtn.textContent=state.theme==='dark'?'LIGHT':'DARK';
+  themeBtn.textContent=state.theme==='dark'?'亮色':'暗色';
   themeBtn.classList.toggle('on',state.theme==='dark');
 }
 function applySound(){
-  soundBtn.textContent=state.sound?'SND ON':'SND OFF';
+  soundBtn.textContent=state.sound?'音效':'静音';
   soundBtn.classList.toggle('on',state.sound);
 }
 
-/* ---------- date ---------- */
-var D=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+/* ---------- 日期 ---------- */
+var D=['日','一','二','三','四','五','六'];
 var d=new Date();
 document.getElementById('date').textContent=
-  d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+D[d.getDay()];
+  d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' 周'+D[d.getDay()];
 
-/* ---------- boot ---------- */
+/* ---------- 启动 ---------- */
 load();
 applyTheme();
 applySound();

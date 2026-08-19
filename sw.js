@@ -1,12 +1,12 @@
-/* PixelTodo service worker: offline cache, cache-busting via version bump */
+/* PixelTodo service worker: 离线缓存，改版时把 CACHE 版本号 +1 即可强制刷新 */
 'use strict';
 
-var CACHE='pixel-todo-v1';
+var CACHE='pixel-todo-v2';
 var ASSETS=[
   './',
   './index.html',
-  './style.css',
-  './app.js',
+  './style.css?v=2',
+  './app.js?v=2',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
@@ -36,7 +36,7 @@ self.addEventListener('fetch',function(e){
   var url=new URL(req.url);
   if(url.origin!==location.origin)return;
 
-  /* navigation: network first, cache fallback (so updates propagate) */
+  /* 页面导航：网络优先，离线回退缓存（保证能收到新版本） */
   if(req.mode==='navigate'){
     e.respondWith(
       fetch(req).then(function(res){
@@ -48,7 +48,7 @@ self.addEventListener('fetch',function(e){
     return;
   }
 
-  /* assets: cache first, network fallback + refresh */
+  /* 静态资源：缓存优先，未命中走网络并写入缓存 */
   e.respondWith(
     caches.match(req).then(function(hit){
       return hit||fetch(req).then(function(res){

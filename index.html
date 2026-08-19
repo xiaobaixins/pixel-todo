@@ -7,50 +7,50 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="PixelTodo">
-<title>PixelTodo · 像素待办</title>
+<meta name="apple-mobile-web-app-title" content="像素待办">
+<title>像素待办</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 <div id="app">
   <header>
     <div class="top">
-      <h1>TODO<span class="cursor">_</span></h1>
+      <h1>待办<span class="cursor">_</span></h1>
       <div class="tools">
-        <button id="themeBtn" class="tool" type="button">DARK</button>
-        <button id="soundBtn" class="tool" type="button">SND ON</button>
+        <button id="themeBtn" class="tool" type="button">暗色</button>
+        <button id="soundBtn" class="tool" type="button">静音</button>
       </div>
     </div>
     <div class="date" id="date"></div>
     <div class="bar"><div class="bar-fill" id="barFill"></div></div>
     <div class="stats">
-      <span id="left">0 LEFT</span>
-      <span id="done">0 DONE</span>
-      <button id="clearBtn" class="mini" type="button" style="display:none">CLEAR</button>
+      <span id="left">0 项未完成</span>
+      <span id="done">0 项已完成</span>
+      <button id="clearBtn" class="mini" type="button" style="display:none">清除已完成</button>
     </div>
   </header>
 
   <main>
     <ul id="list"></ul>
-    <div id="empty">NO TASKS YET<br><span class="blink">ADD ONE BELOW</span></div>
+    <div id="empty">还没有任务<br><span class="blink">在下方添加一个</span></div>
   </main>
 
   <footer>
     <div class="filters">
-      <button class="chip active" data-f="all" type="button">ALL</button>
-      <button class="chip" data-f="active" type="button">ACTIVE</button>
-      <button class="chip" data-f="done" type="button">DONE</button>
+      <button class="chip active" data-f="all" type="button">全部</button>
+      <button class="chip" data-f="active" type="button">未完成</button>
+      <button class="chip" data-f="done" type="button">已完成</button>
     </div>
     <form id="addForm" autocomplete="off">
-      <input id="input" type="text" placeholder="ADD TASK..." maxlength="80">
-      <button id="addBtn" type="submit">ADD</button>
+      <input id="input" type="text" placeholder="添加任务..." maxlength="80">
+      <button id="addBtn" type="submit">添加</button>
     </form>
-    <p class="hint">TAP TEXT TO EDIT / TAP BOX TO CHECK</p>
+    <p class="hint">点文字编辑 / 点方块勾选</p>
   </footer>
 </div>
-<script src="app.js"></script>
+<script src="app.js?v=2"></script>
 </body>
 </html>

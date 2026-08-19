@@ -1,6 +1,6 @@
 {
-  "name": "像素待办 PixelTodo",
-  "short_name": "PixelTodo",
+  "name": "像素待办",
+  "short_name": "像素待办",
   "description": "像素风极简待办清单 / Minimal pixel-art todo list",
   "lang": "zh-CN",
   "start_url": "./",
