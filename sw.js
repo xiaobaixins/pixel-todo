@@ -1,12 +1,12 @@
 /* PixelTodo service worker: 离线缓存，改版时把 CACHE 版本号 +1 即可强制刷新 */
 'use strict';
 
-var CACHE='pixel-todo-v3';
+var CACHE='pixel-todo-v4';
 var ASSETS=[
   './',
   './index.html',
-  './style.css?v=3',
-  './app.js?v=3',
+  './style.css?v=4',
+  './app.js?v=4',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',

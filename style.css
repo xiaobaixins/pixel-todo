@@ -233,6 +233,18 @@ footer{padding-top:14px;}
 
 .hint{margin-top:14px;text-align:center;font-size:10px;letter-spacing:2px;color:var(--ink-soft);opacity:.8;}
 
+/* ---------- 提示浮层 ---------- */
+.toast{
+  position:fixed;left:50%;bottom:90px;
+  transform:translateX(-50%) translateY(10px);
+  background:var(--panel);color:var(--ink);
+  border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);
+  padding:10px 16px;font-size:12px;letter-spacing:2px;
+  opacity:0;pointer-events:none;z-index:99;
+  transition:opacity .2s,transform .2s;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:380px){
   h1{font-size:22px;}

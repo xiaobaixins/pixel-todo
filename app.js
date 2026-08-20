@@ -2,7 +2,8 @@
 'use strict';
 
 var LS_KEY='pixeltodo.v1', THEME_KEY='pixeltodo.theme', SND_KEY='pixeltodo.sound',
-    TARGET_KEY='pixeltodo.target', FOCUS_KEY='pixeltodo.focus';
+    TARGET_KEY='pixeltodo.target', FOCUS_KEY='pixeltodo.focus',
+    HISTORY_KEY='pixeltodo.history', LASTDAY_KEY='pixeltodo.lastday';
 
 var CATS=['数学','英语','408','政治','其他'];
 var CAT_COLORS={'数学':'#3f7d4e','英语':'#3a6ea5','408':'#b5783a','政治':'#a53a5e','其他':'#8a7f68'};
@@ -17,6 +18,7 @@ var state={
   sound:localStorage.getItem(SND_KEY)!=='0',
   target:localStorage.getItem(TARGET_KEY)||'2026-12-19',
   focus:null,
+  history:null,
   heatOpen:true
 };
 
@@ -43,7 +45,8 @@ var list=document.getElementById('list'),
     pomoTime=document.getElementById('pomoTime'),
     pomoCtl=document.getElementById('pomoCtl'),
     pomoResetBtn=document.getElementById('pomoReset'),
-    pomoStats=document.getElementById('pomoStats');
+    pomoStats=document.getElementById('pomoStats'),
+    toastEl=document.getElementById('toast');
 
 /* ---------- 工具 ---------- */
 function pad(n){return String(n).padStart(2,'0');}
@@ -81,6 +84,11 @@ function loadFocus(){
   catch(e){state.focus={};}
 }
 function saveFocus(){localStorage.setItem(FOCUS_KEY,JSON.stringify(state.focus));}
+function loadHistory(){
+  try{state.history=JSON.parse(localStorage.getItem(HISTORY_KEY))||{};}
+  catch(e){state.history={};}
+}
+function saveHistory(){localStorage.setItem(HISTORY_KEY,JSON.stringify(state.history));}
 
 /* ---------- 考研倒计时 ---------- */
 function countdownDays(){
@@ -106,7 +114,7 @@ cdInput.addEventListener('keydown',function(e){if(e.key==='Enter')cdDone();});
 /* ---------- 打卡热力图 ---------- */
 function completionMap(){
   var m={};
-  state.todos.forEach(function(t){if(t.done&&t.doneAt){m[t.doneAt]=(m[t.doneAt]||0)+1;}});
+  Object.keys(state.history||{}).forEach(function(k){m[k]=state.history[k];});
   return m;
 }
 function streakDays(m){
@@ -167,10 +175,17 @@ function render(){
     chk.setAttribute('aria-label',t.done?'标记为未完成':'标记为完成');
     chk.innerHTML='<i></i>';
     chk.addEventListener('click',function(){
+      var k=todayKey();
       t.done=!t.done;
-      t.doneAt=t.done?todayKey():null;
+      if(t.done){
+        t.doneAt=k;
+        state.history[k]=(state.history[k]||0)+1;
+      }else{
+        if(t.doneAt&&state.history[t.doneAt]>0)state.history[t.doneAt]--;
+        t.doneAt=null;
+      }
       beep(t.done?880:440,0.08);
-      save();render();
+      save();saveHistory();render();
     });
     li.appendChild(chk);
 
@@ -215,9 +230,10 @@ function render(){
       del.type='button';del.className='del';del.textContent='×';
       del.setAttribute('aria-label','删除任务');
       del.addEventListener('click',function(){
+        if(t.done&&t.doneAt&&state.history[t.doneAt]>0)state.history[t.doneAt]--;
         state.todos=state.todos.filter(function(x){return x.id!==t.id;});
         beep(240,0.1);
-        save();render();
+        save();saveHistory();render();
       });
       li.appendChild(del);
     }
@@ -241,6 +257,40 @@ function render(){
   renderHeatmap();
 }
 
+/* ---------- 每日自动重置 ---------- */
+var lastDay=todayKey();
+var toastTimer=null;
+function toast(msg){
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){toastEl.classList.remove('show');},2200);
+}
+function dayReset(){
+  var k=todayKey(),changed=false;
+  state.todos.forEach(function(t){
+    if(t.done&&t.doneAt!==k){
+      t.done=false;t.doneAt=null;changed=true;
+    }
+  });
+  if(changed){save();toast('新的一天 · 任务已重置');}
+  localStorage.setItem(LASTDAY_KEY,k);
+}
+function rolloverCheck(){
+  var k=todayKey();
+  if(k!==lastDay){
+    lastDay=k;
+    dayReset();
+    render();
+    renderPomo();
+  }
+}
+document.addEventListener('visibilitychange',function(){
+  if(!document.hidden)rolloverCheck();
+});
+window.addEventListener('focus',rolloverCheck);
+setInterval(rolloverCheck,60000);
+
 /* ---------- 事件 ---------- */
 addForm.addEventListener('submit',function(e){
   e.preventDefault();
@@ -260,9 +310,12 @@ document.querySelectorAll('.chip[data-cat]').forEach(function(c){
   c.addEventListener('click',function(){state.cat=c.dataset.cat;render();});
 });
 clearBtn.addEventListener('click',function(){
+  state.todos.forEach(function(t){
+    if(t.done&&t.doneAt&&state.history[t.doneAt]>0)state.history[t.doneAt]--;
+  });
   state.todos=state.todos.filter(function(t){return !t.done;});
   beep(330,0.08);
-  save();render();
+  save();saveHistory();render();
 });
 themeBtn.addEventListener('click',function(){
   state.theme=state.theme==='dark'?'light':'dark';
@@ -352,6 +405,8 @@ document.getElementById('date').textContent=
 /* ---------- 启动 ---------- */
 load();
 loadFocus();
+loadHistory();
+dayReset();
 applyTheme();
 applySound();
 renderCountdown();
@@ -365,5 +420,6 @@ if('serviceWorker' in navigator){
 }
 
 /* 调试钩子（浏览器测试用） */
-window.__pt={state:state,pomo:pomo,pomoStartPause:pomoStartPause,pomoReset:pomoReset};
+window.__pt={state:state,pomo:pomo,pomoStartPause:pomoStartPause,pomoReset:pomoReset,
+  dayReset:dayReset,rolloverCheck:rolloverCheck,setLastDay:function(k){lastDay=k;}};
 })();
